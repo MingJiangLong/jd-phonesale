@@ -10,7 +10,6 @@ const axios = Axios.create({
 /** 不需要token的接口 */
 const notNeedToken = ['/sms/sendVerifyCode', '/login']
 
-localStorage.getItem('APP__TOKEN')
 axios.interceptors.request.use((config) => {
   const url = config.url;
   if (notNeedToken.includes(url ?? '')) return config;
@@ -90,7 +89,7 @@ export async function fetchUserInfo() {
  * @returns 
  */
 export async function logout() {
-  return await post('/logout')
+  return await post('/exit')
 }
 
 export type Stock = {
