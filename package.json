@@ -5,8 +5,8 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite --force",
-		"test": "vite build && node copy-script.js --mode testing",
-		"build": "vite build && node copy-script.js --mode prod"
+		"test": "vite build --mode testing && node copy-script.js --mode testing",
+		"build": "vite build --mode prod && node copy-script.js --mode prod"
 	},
 	"dependencies": {
 		"@types/sha1": "^1.1.3",

@@ -2,9 +2,9 @@ import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import legacy from '@vitejs/plugin-legacy'
 import path from "path";
-import viteCompression from 'vite-plugin-compression';
-import { chunkSplitPlugin } from 'vite-plugin-chunk-split';
-import { visualizer } from "rollup-plugin-visualizer";
+// import viteCompression from 'vite-plugin-compression';
+// import { chunkSplitPlugin } from 'vite-plugin-chunk-split';
+// import { visualizer } from "rollup-plugin-visualizer";
 const isProd = process.argv[process.argv.length - 1] == 'prod'
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
@@ -38,10 +38,10 @@ export default defineConfig(({ mode }) => {
       }),
       // viteCompression(),
       // chunkSplitPlugin(),
-      visualizer({
-        emitFile: true,
-        filename: "stats.html",
-      })
+      // visualizer({
+      //   emitFile: true,
+      //   filename: "stats.html",
+      // })
     ],
 
     resolve: {
@@ -72,7 +72,7 @@ export default defineConfig(({ mode }) => {
             if (id.includes(NODE_MODULES)) return 'vendor'
           },
         },
-      }
+      },
     },
     server: {
       // 支持ip
@@ -87,6 +87,9 @@ export default defineConfig(({ mode }) => {
           },
         }
       }
+    },
+    optimizeDeps:{
+      exclude:['copy-script.js']
     }
   }
 })

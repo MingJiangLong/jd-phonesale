@@ -90,7 +90,7 @@ export async function fetchUserInfo() {
  * @returns 
  */
 export async function logout() {
-  return await get('/logout')
+  return await post('/logout')
 }
 
 export type Stock = {
