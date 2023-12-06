@@ -7,7 +7,7 @@
         <div>数量</div>
       </div>
       <div>
-        <div>¥ {{ props.item.salePrice }}</div>
+        <div>¥ {{ props.item.originalPrice}}</div>
         <div>{{ props.item.quantity }}</div>
       </div>
     </div>

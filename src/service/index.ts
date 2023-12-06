@@ -283,6 +283,7 @@ export type OrderDetail = {
 
   getCode: string
   orderStatus: string
+  orderStatusDesc: string
   thirdOrderNo: string
 }
 /**

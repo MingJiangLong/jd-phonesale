@@ -14,8 +14,8 @@
           <div class="goods-card" v-for="item in list">
             <span class="phone-name">{{ item.productName }}</span>
             <div class="price-container">
-              <span>¥{{ item.price ?? 0 }}</span>
               <span>约定价</span>
+              <span>¥{{ item.price ?? 0 }}</span>
             </div>
             <div class="stock-operate">
               <div>库存</div>
@@ -226,16 +226,17 @@ function onChangeStoreId() {
       padding-top: 8px;
 
       &>span:nth-child(1) {
-        font-size: 17px;
-        color: #333333;
-        font-weight: 600;
-      }
 
-      &>span:nth-child(2) {
         font-size: 13px;
         color: #89959c;
         font-weight: 400;
         padding-left: 4px;
+      }
+
+      &>span:nth-child(2) {
+        font-size: 17px;
+        color: #333333;
+        font-weight: 600;
       }
     }
 

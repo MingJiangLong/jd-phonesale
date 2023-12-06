@@ -2,6 +2,7 @@
   <div class="status-bar-container" @click="emits('onClick')">
     <img :src="blue_icon" v-if="resolveStatus.includes(props.status ?? '')" />
     <img :src="red_icon" v-if="rejectStatus.includes(props.status ?? '')" />
+    <span :style="{color:resolveStatus.includes(props.status ?? '')?'black':'red'}">{{ props.statusStr }}</span>
     <div>{{ props.time }}</div>
     <img src="@/assets/img/arrow_right@2x.png" />
   </div>
@@ -16,6 +17,7 @@ const resolveStatus = ['JD_OUTBOUND', 'JD_SHIPPED', 'JD_DELIVERED',
   'JD_COMPLETED', 'JD_CANCELED',];
 const props = defineProps<{
   status?: string
+  statusStr?: string
   time?: string
 }>()
 

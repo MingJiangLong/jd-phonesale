@@ -2,7 +2,7 @@
   <Card>
     <div class="post-info" v-for="item in orderDetail?.orderShipList">
       <div>订单编号</div>
-      <div>{{ orderDetail?.orderNo }} <span @click="onCopy">复制</span></div>
+      <div>{{ orderDetail?.thirdOrderNo }} <span @click="onCopy">复制</span></div>
       <div>下单时间</div>
       <div>{{ orderDetail?.createdTime }}</div>
       <div>收件人</div>
@@ -26,7 +26,7 @@ const orderDetail = inject<Ref<OrderDetail>>("orderDetail")
 
 function onCopy() {
   
-  writeText(orderDetail?.value?.orderNo ?? '')
+  writeText(orderDetail?.value?.thirdOrderNo ?? '')
   showToast("订单编号已复制")
 }
 </script>

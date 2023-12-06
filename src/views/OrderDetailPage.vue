@@ -9,6 +9,7 @@
                  style="margin-bottom: 10px"
                  :time="orderDetail?.createdTime"
                  :status="orderDetail?.orderStatus"
+                 :status-str="orderDetail?.orderStatusDesc"
                  @on-click="onClickStatusBar" />
       <Card title="商品信息">
         <CompleteGoodsInfo :items="orderDetail?.orderItemList ?? []" />

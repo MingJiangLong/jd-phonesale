@@ -4,8 +4,8 @@
       <div class="address">
         <img src="@/assets/img/ic_order@2x.png" alt="" />
         <div>
-          <div>订单编号 - {{ postInfo.orderNo }}</div>
-          <div>收货地址：广东省深圳市南山区粤海街道博园路8号小区12座2011</div>
+          <div>订单编号 - {{ postInfo.thirdOrderNo }}</div>
+          <div>收货地址：{{ postInfo.deliveryAddress }}</div>
         </div>
       </div>
     </Card>

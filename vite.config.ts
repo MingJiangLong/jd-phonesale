@@ -79,7 +79,8 @@ export default defineConfig(({ mode }) => {
       host: "0.0.0.0",
       proxy: {
         '/dev': {
-          target: 'http://192.168.19.50:9926',
+          // target: 'http://192.168.19.50:9926',
+          target: 'https://ybtnkj.aicebox.com/',
           secure: false,
           changeOrigin: true,
           rewrite(path) {
