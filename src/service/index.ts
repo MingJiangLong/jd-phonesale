@@ -23,10 +23,12 @@ axios.interceptors.response.use(res => {
     return res.data
   }
 
-  if (res.data?.code == 'A0006') {
+  // a0006 登录信息过期  c0002登录时微信报错
+  if (res.data?.code == 'A0006' || res.data?.code == 'C0002') {
     setAppToken('')
     return redirectToLogin()
   }
+  
   return Promise.reject(new Error(res.data?.msg ?? '系统异常'))
 }, (error) => {
   return Promise.reject(error)
