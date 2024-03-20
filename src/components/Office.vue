@@ -10,6 +10,18 @@
       <div class="update-office-modal">
         <div class="title">选择门店</div>
         <div class="list">
+          <List>
+            <RadioGroup v-model="officeId">
+              <div class="list-item" v-for="item in officeInfo.officeList">
+                <div>{{ item.storeName }}</div>
+                <div>
+                  <Radio :name="item.storeId" />
+                </div>
+              </div>
+            </RadioGroup>
+          </List>
+        </div>
+        <!-- <div class="list">
           <RadioGroup v-model="officeId">
             <div class="list-item" v-for="item in officeInfo.officeList">
               <div>{{ item.storeName }}</div>
@@ -18,7 +30,7 @@
               </div>
             </div>
           </RadioGroup>
-        </div>
+        </div> -->
         <div class="operate flex">
           <Button type="primary" @click.stop="onCloseModal">确定</Button>
         </div>
@@ -30,7 +42,7 @@
 <script setup lang="ts">
 import useOfficeInfo from '@/store/useOfficeInfo';
 import { showError } from '@/utils';
-import { Overlay, RadioGroup, Button, Radio } from "vant";
+import { Overlay, RadioGroup, Button, Radio, List } from "vant";
 import { onMounted } from 'vue';
 import { watch } from 'vue';
 import { computed } from 'vue';
@@ -118,6 +130,8 @@ onMounted(() => {
 
   .list {
     flex: 1;
+    display: flex;
+    flex-direction: column;
     overflow-y: scroll;
   }
 

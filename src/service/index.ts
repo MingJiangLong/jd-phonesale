@@ -1,38 +1,40 @@
-
-import { HOST } from '@/config'
-import { getAppToken, redirectToLogin, setAppToken } from '@/utils'
-import Axios, { AxiosRequestConfig } from 'axios'
+import { HOST, isDev } from "@/config"
+import { getAppToken, redirectToLogin, setAppToken } from "@/utils"
+import Axios, { AxiosRequestConfig } from "axios"
 const axios = Axios.create({
   timeout: 1000 * 6,
   timeoutErrorMessage: "请求超时,稍候重试",
-  baseURL: HOST
+  baseURL: HOST,
 })
 /** 不需要token的接口 */
-const notNeedToken = ['/sms/sendVerifyCode', '/login']
+const notNeedToken = ["/sms/sendVerifyCode", "/login"]
 
-axios.interceptors.request.use((config) => {
-  const url = config.url;
-  if (notNeedToken.includes(url ?? '')) return config;
+axios.interceptors.request.use(config => {
+  const url = config.url
+  if (notNeedToken.includes(url ?? "")) return config
   const token = getAppToken()
   config.headers.Authorization = token
   return config
 })
 
-axios.interceptors.response.use(res => {
-  if (res.data?.code == 10000) {
-    return res.data
-  }
+axios.interceptors.response.use(
+  res => {
+    if (res.data?.code == 10000) {
+      return res.data
+    }
 
-  // a0006 登录信息过期  c0002登录时微信报错
-  if (res.data?.code == 'A0006' || res.data?.code == 'C0002') {
-    setAppToken('')
-    return redirectToLogin()
+    // a0006 登录信息过期  c0002登录时微信报错
+    if ((res.data?.code == "A0006" || res.data?.code == "C0002") && !isDev) {
+      setAppToken("")
+      return redirectToLogin()
+    }
+
+    return Promise.reject(new Error(res.data?.msg ?? "系统异常"))
+  },
+  error => {
+    return Promise.reject(error)
   }
-  
-  return Promise.reject(new Error(res.data?.msg ?? '系统异常'))
-}, (error) => {
-  return Promise.reject(error)
-})
+)
 
 type Response<T> = {
   code: number
@@ -40,7 +42,11 @@ type Response<T> = {
   message: string
 }
 
-function post<T = any>(url: string, data?: any, config?: AxiosRequestConfig<any>) {
+function post<T = any>(
+  url: string,
+  data?: any,
+  config?: AxiosRequestConfig<any>
+) {
   return axios.post<any, Response<T>>(url, data, config)
 }
 
@@ -53,24 +59,24 @@ function get<T = any>(url: string, config?: AxiosRequestConfig<any>) {
  * @param phoneNumber 手机号码
  */
 export function fetchVerifyCode(phoneNumber: string) {
-  return get('/sms/sendVerifyCode', {
+  return get("/sms/sendVerifyCode", {
     params: {
-      phoneNumber
-    }
+      phoneNumber,
+    },
   })
 }
 
 /**
  * 登录
- * @param phoneNumber 手机号 
+ * @param phoneNumber 手机号
  * @param verifyCode 验证码
- * @returns 
+ * @returns
  */
 export function login(phoneNumber: string, smsCode: string, code: string) {
   return post<{
     accessToken: string
     tokenHead: string
-  }>('/login', {
+  }>("/login", {
     phoneNumber,
     smsCode,
     code,
@@ -82,16 +88,16 @@ export async function fetchUserInfo() {
     phoneNumber: string
     realName: string
     username: string
-  }>('/user/currentUser')
+  }>("/user/currentUser")
 }
 /**
  * 登出
- * @param userName 
- * @param verifyCode 
- * @returns 
+ * @param userName
+ * @param verifyCode
+ * @returns
  */
 export async function logout() {
-  return await post('/exit')
+  return await post("/exit")
 }
 
 export type Stock = {
@@ -143,7 +149,7 @@ export type Stock = {
 export async function fetchGoodsStockList(options: {
   pageNumber: number
   productName?: string
-  searchType: "1" | '2'
+  searchType: "1" | "2"
   storeId?: string | number
 }) {
   return await post<{
@@ -151,9 +157,9 @@ export async function fetchGoodsStockList(options: {
     pages: number
     pageNumber: number
     totalCount: number
-  }>('/stock/stockPage', {
+  }>("/stock/stockPage", {
     ...options,
-    pageSize: 10
+    pageSize: 10,
   })
 }
 
@@ -220,15 +226,142 @@ export type Store = {
 }
 /**
  * 获取门店列表
- * @returns 
+ * @returns
  */
 export async function fetchStoresList() {
-  return await get<Store[]>('/shop/currentUserStores')
+  // return {
+  //   code: "10000",
+  //   msg: "操作成功",
+  //   data: [
+  //     {
+  //       relId: 645,
+  //       uid: 5874437,
+  //       storeId: 225901,
+  //       businessId: 1041,
+  //       roleId: "ROLE_TNKJ_DZ",
+  //       enabled: 1,
+  //       createdTime: 1710401920000,
+  //       updatedTime: 1710401920000,
+  //       storeName: "方旭龙岗麟恒中心广场",
+  //       username: "15994811809",
+  //       phoneNumber: "15994811809",
+  //       realName: "吴玲珠",
+  //       roleName: "店长",
+  //     },
+  //     {
+  //       relId: 645,
+  //       uid: 5874437,
+  //       storeId: 225901,
+  //       businessId: 1041,
+  //       roleId: "ROLE_TNKJ_DZ",
+  //       enabled: 1,
+  //       createdTime: 1710401920000,
+  //       updatedTime: 1710401920000,
+  //       storeName: "方旭龙岗麟恒中心广场",
+  //       username: "15994811809",
+  //       phoneNumber: "15994811809",
+  //       realName: "吴玲珠",
+  //       roleName: "店长",
+  //     },
+  //     {
+  //       relId: 645,
+  //       uid: 5874437,
+  //       storeId: 225901,
+  //       businessId: 1041,
+  //       roleId: "ROLE_TNKJ_DZ",
+  //       enabled: 1,
+  //       createdTime: 1710401920000,
+  //       updatedTime: 1710401920000,
+  //       storeName: "方旭龙岗麟恒中心广场",
+  //       username: "15994811809",
+  //       phoneNumber: "15994811809",
+  //       realName: "吴玲珠",
+  //       roleName: "店长",
+  //     },
+  //     {
+  //       relId: 645,
+  //       uid: 5874437,
+  //       storeId: 225901,
+  //       businessId: 1041,
+  //       roleId: "ROLE_TNKJ_DZ",
+  //       enabled: 1,
+  //       createdTime: 1710401920000,
+  //       updatedTime: 1710401920000,
+  //       storeName: "方旭龙岗麟恒中心广场",
+  //       username: "15994811809",
+  //       phoneNumber: "15994811809",
+  //       realName: "吴玲珠",
+  //       roleName: "店长",
+  //     },
+  //     {
+  //       relId: 645,
+  //       uid: 5874437,
+  //       storeId: 225901,
+  //       businessId: 1041,
+  //       roleId: "ROLE_TNKJ_DZ",
+  //       enabled: 1,
+  //       createdTime: 1710401920000,
+  //       updatedTime: 1710401920000,
+  //       storeName: "方旭龙岗麟恒中心广场",
+  //       username: "15994811809",
+  //       phoneNumber: "15994811809",
+  //       realName: "吴玲珠",
+  //       roleName: "店长",
+  //     },
+  //     {
+  //       relId: 645,
+  //       uid: 5874437,
+  //       storeId: 225901,
+  //       businessId: 1041,
+  //       roleId: "ROLE_TNKJ_DZ",
+  //       enabled: 1,
+  //       createdTime: 1710401920000,
+  //       updatedTime: 1710401920000,
+  //       storeName: "方旭龙岗麟恒中心广场",
+  //       username: "15994811809",
+  //       phoneNumber: "15994811809",
+  //       realName: "吴玲珠",
+  //       roleName: "店长",
+  //     },
+  //     {
+  //       relId: 645,
+  //       uid: 5874437,
+  //       storeId: 225901,
+  //       businessId: 1041,
+  //       roleId: "ROLE_TNKJ_DZ",
+  //       enabled: 1,
+  //       createdTime: 1710401920000,
+  //       updatedTime: 1710401920000,
+  //       storeName: "方旭龙岗麟恒中心广场",
+  //       username: "15994811809",
+  //       phoneNumber: "15994811809",
+  //       realName: "吴玲珠",
+  //       roleName: "店长",
+  //     },
+  //     {
+  //       relId: 645,
+  //       uid: 5874437,
+  //       storeId: 225901,
+  //       businessId: 1041,
+  //       roleId: "ROLE_TNKJ_DZ",
+  //       enabled: 1,
+  //       createdTime: 1710401920000,
+  //       updatedTime: 1710401920000,
+  //       storeName: "方旭龙岗麟恒中心广场",
+  //       username: "15994811809",
+  //       phoneNumber: "15994811809",
+  //       realName: "吴玲珠",
+  //       roleName: "店长",
+  //     },
+  //   ],
+  //   ts: 1710914982719,
+  // }
+  return await get<Store[]>("/shop/currentUserStores")
 }
 
 /**
  * 修改商品库存
- * @returns 
+ * @returns
  */
 export async function updateGoodsStock(option: {
   changeQty?: number
@@ -236,12 +369,12 @@ export async function updateGoodsStock(option: {
   productId?: number
   storeId?: number
 }) {
-  return await post('/stock/stockReport', option)
+  return await post("/stock/stockReport", option)
 }
 
 /**
  * 获取订单列表
- * @returns 
+ * @returns
  */
 export async function fetchOrderList(data: {
   storeId: number
@@ -252,9 +385,9 @@ export async function fetchOrderList(data: {
     pageNumber: number
     totalCount: number
     result: any[]
-  }>('/order/storeOrderPageWithItems', {
+  }>("/order/storeOrderPageWithItems", {
     ...data,
-    pageSize: 10
+    pageSize: 10,
   })
 }
 
@@ -290,26 +423,25 @@ export type OrderDetail = {
 }
 /**
  * 获取订单详情
- * @returns 
+ * @returns
  */
 export async function fetchOrderDetail(params: { orderId: string | number }) {
-  return await get<OrderDetail>('/order/queryStoreOrderDetail', {
-    params: params
+  return await get<OrderDetail>("/order/queryStoreOrderDetail", {
+    params: params,
   })
 }
 
 /**
  * 确认订单
- * @returns 
+ * @returns
  */
 export async function submitSn(data: {
   orderId: number | string
-  snItemList: Array<{ orderItemId: number | string, snList: string[] }>
+  snItemList: Array<{ orderItemId: number | string; snList: string[] }>
   storeId: number | string
 }) {
-  return post('/order/submitSNAndShipment', data)
+  return post("/order/submitSNAndShipment", data)
 }
-
 
 type PostInfo = {
   /**
@@ -340,17 +472,17 @@ type PostInfo = {
 }
 /**
  * 获取订单进度
- * @returns 
+ * @returns
  */
 export async function fetchOrderProcess(params: { orderId: string | number }) {
   return get<PostInfo>("/order/getOrderLog", {
-    params
+    params,
   })
 }
 
 export async function confirmReject(params: { orderId: string }) {
-  return get('/order/confirmReject', {
-    params
+  return get("/order/confirmReject", {
+    params,
   })
 }
 
@@ -361,5 +493,5 @@ type SignInfo = {
 }
 
 export function fetchSignInfo(url: string) {
-  return get<SignInfo>('/wx/jsSignature', { params: { url } })
+  return get<SignInfo>("/wx/jsSignature", { params: { url } })
 }

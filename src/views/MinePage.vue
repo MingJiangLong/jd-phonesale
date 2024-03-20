@@ -15,6 +15,7 @@ import useLoginInfo from "@/store/useLoginInfo"
 import { fetchUserInfo, logout } from "@/service";
 import { redirectToLogin, setAppToken, showError } from "@/utils";
 import { onMounted } from "vue";
+import { isDev } from "@/config";
 const loginInfo = useLoginInfo()
 const isLogout = ref(false)
 
@@ -34,6 +35,7 @@ async function onLogout() {
     await logout()
     loginInfo.clearAll()
     setAppToken('')
+    if (!isDev) return;
     redirectToLogin()
   } catch (error: any) {
     showError(error?.message)
