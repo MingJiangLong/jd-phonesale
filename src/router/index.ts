@@ -35,6 +35,16 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("@/views/FillOrderInfo.vue"),
     meta: { title: "订单详情" },
   },
+  {
+    path: "/stock-out/:orderId",
+    component: () => import("@/views/StockOutPage.vue"),
+    meta: { title: "出库单" },
+  },
+  {
+    path: "/shopping-list/:orderId",
+    component: () => import("@/views/ShoppingListPage.vue"),
+    meta: { title: "购物清单" },
+  },
 ]
 const router = createRouter({
   history: createWebHashHistory(),

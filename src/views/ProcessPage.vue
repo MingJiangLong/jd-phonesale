@@ -4,8 +4,8 @@
       <div class="address">
         <img src="@/assets/img/ic_order@2x.png" alt="" />
         <div>
-          <div>订单编号 - {{ postInfo.thirdOrderNo }}</div>
-          <div>收货地址：{{ postInfo.deliveryAddress }}</div>
+          <div>订单编号 - {{ postInfo?.thirdOrderNo }}</div>
+          <div>收货地址：{{ postInfo?.deliveryAddress }}</div>
         </div>
       </div>
     </Card>

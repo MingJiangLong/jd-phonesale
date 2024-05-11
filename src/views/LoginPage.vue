@@ -1,4 +1,6 @@
 <template>
+
+  <!-- 登录页面 -->
   <div class="login-page-container">
     <p class="welcome">欢迎登陆</p>
 

@@ -5,6 +5,8 @@
       <div>{{ orderDetail?.thirdOrderNo }} <span @click="onCopy">复制</span></div>
       <div>下单时间</div>
       <div>{{ orderDetail?.createdTime }}</div>
+      <div>预计送达</div>
+      <div>{{item?.promiseMsg}}</div>
       <div>收件人</div>
       <div>{{ item.consignee }}</div>
       <div>手机号码</div>

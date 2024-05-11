@@ -47,9 +47,8 @@ function onOrderCodeChange(valueStr: string, i1: number, i2: number) {
 
 async function onScanQrCode(i1: number, i2: number) {
   try {
-    const result = await wechat.scanQRCode<string>()
-    console.log('result', result);
-
+    const result = await wechat.scanQRCode()
+    if (!result) return;
     onOrderCodeChange(result, i1, i2)
   } catch (error: any) {
     showError(error?.message)

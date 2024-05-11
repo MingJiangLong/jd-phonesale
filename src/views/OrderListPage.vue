@@ -2,6 +2,7 @@
   <div class="page-container">
     <Office @on-change="onOfficeChange" />
     <BlockTabs :tabs="tabs" v-model:value="currentTab" @on-change="onTabChange" />
+   
     <div style="display: flex;flex-direction: column; flex: 1;overflow-y:scroll">
       <UboxList :load="getList" description="暂无订单数据" ref="listRef">
         <template #default="{ list }">
@@ -104,6 +105,7 @@ function onGoodsCardClick(item: any) {
     router.push(`/order/detail/${item?.orderId}`)
   }
 }
+
 
 </script>
 

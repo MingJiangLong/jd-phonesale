@@ -6,22 +6,23 @@
       <!-- <span>{{ officeInfo.currentOffice ? officeInfo.currentOffice?.storeName : '请选择门店' }}</span> -->
       <span>{{ officeName }}</span>
     </div>
-    <Overlay :show="showModal">
-      <div class="update-office-modal">
-        <div class="title">选择门店</div>
-        <div class="list">
-          <List>
-            <RadioGroup v-model="officeId">
-              <div class="list-item" v-for="item in officeInfo.officeList">
-                <div>{{ item.storeName }}</div>
-                <div>
-                  <Radio :name="item.storeId" />
+    <Popup :show="showModal" position="bottom">
+      <div style="background: rgba(0, 0, 0, .7);">
+        <div class="update-office-modal">
+          <div class="title">选择门店</div>
+          <div class="list" @scroll="e=>e.stopPropagation()">
+            <List>
+              <RadioGroup v-model="officeId">
+                <div class="list-item" v-for="item in officeInfo.officeList">
+                  <div>{{ item.storeName }}</div>
+                  <div>
+                    <Radio :name="item.storeId" />
+                  </div>
                 </div>
-              </div>
-            </RadioGroup>
-          </List>
-        </div>
-        <!-- <div class="list">
+              </RadioGroup>
+            </List>
+          </div>
+          <!-- <div class="list">
           <RadioGroup v-model="officeId">
             <div class="list-item" v-for="item in officeInfo.officeList">
               <div>{{ item.storeName }}</div>
@@ -31,18 +32,19 @@
             </div>
           </RadioGroup>
         </div> -->
-        <div class="operate flex">
-          <Button type="primary" @click.stop="onCloseModal">确定</Button>
+          <div class="operate flex">
+            <Button type="primary" @click.stop="onCloseModal">确定</Button>
+          </div>
         </div>
       </div>
-    </Overlay>
+    </Popup>
   </div>
 </template>
 
 <script setup lang="ts">
 import useOfficeInfo from '@/store/useOfficeInfo';
 import { showError } from '@/utils';
-import { Overlay, RadioGroup, Button, Radio, List } from "vant";
+import { Popup, RadioGroup, Button, Radio, List } from "vant";
 import { onMounted } from 'vue';
 import { watch } from 'vue';
 import { computed } from 'vue';
@@ -110,8 +112,6 @@ onMounted(() => {
 }
 
 .update-office-modal {
-  position: absolute;
-  bottom: 0;
   width: 100vw;
   height: 52vh;
   background: #f4f6fc;

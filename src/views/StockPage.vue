@@ -1,21 +1,33 @@
 <template>
   <div class="page-container stock-page-container">
+    <PhoneType v-model:show="showOptions" @on-change="onChangeGoodsType" v-model:activeInfo="activeInfo" />
     <Office @on-change="onChangeStoreId" />
     <Tabs v-model:active="tabIndex" @change="onToggleTab">
       <Tab title="未输入库存" />
       <Tab title="已输入库存" />
     </Tabs>
-
-    <div class="tab-container">
-      <Search placeholder="请输入商品名称" @onSearch="onSearch" ref="searchRef" />
+    <Row
+         align="center"
+         justify="end"
+         style="padding: 5px;font-size: 12px;">
+      <Col span="7">
+      <input v-model="currentSearchTypeName" placeholder="请选择类型" disabled
+             style="text-align: right; width: 100%;border: none;background: transparent;" />
+      </Col>
+      <Col offset="2" @click="showOptions = !showOptions">
+      <img src="@/assets/img/ic_arrow_down@2x.png" style="height: 18px;width: 18px;"/>
+      </Col>
+    </Row>
+    <Search placeholder="请输入商品名称" @onSearch="onSearch" ref="searchRef" style="padding: 5px;" />
+    <div style="display: flex;flex-direction: column; flex: 1;overflow-y:scroll;padding: 5px;">
       <!-- 本来两个列表是差别是很大的，谁知道后来就一样了 -->
       <UboxList :load="getStockGoodsList" description="暂无商品库存记录" ref="listRef">
         <template #default="{ list }">
           <div class="goods-card" v-for="item in list">
             <span class="phone-name">{{ item.productName }}</span>
             <div class="price-container">
-              <span>约定价</span>
               <span>¥{{ item.price ?? 0 }}</span>
+              <span>约定价</span>
             </div>
             <div class="stock-operate">
               <div>库存</div>
@@ -40,9 +52,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, } from "vue"
+import { onMounted, ref, computed } from "vue"
 import {
-  Tabs, Tab, Overlay, Button,
+  Tabs, Tab, Overlay, Button, Row, Col
 } from "vant"
 import Search from "@/components/Search.vue"
 import { fetchGoodsStockList, Stock, updateGoodsStock } from "@/service";
@@ -50,15 +62,8 @@ import { showError } from "@/utils";
 import Office from "@/components/Office.vue";
 import useOfficeInfo from "@/store/useOfficeInfo";
 import UboxList from "@/components/UboxList.vue";
+import PhoneType from "@/components/PhoneType.vue";
 
-
-// type StockInfo = {
-//   page: number
-//   loading: boolean
-//   finished: boolean
-//   list: Array<Stock>
-//   total: number
-// }
 
 const officeInfo = useOfficeInfo()
 /**
@@ -124,7 +129,8 @@ async function getStockGoodsList(pageNumber: number) {
     searchType: tabIndex.value == STOCK_INPUT ? '2' : '1',
     pageNumber,
     productName: searchValue.value,
-    storeId: officeInfo.storeId
+    storeId: officeInfo.storeId,
+    categoryId: activeInfo.value.subId ?? activeInfo.value.mainId ?? 0
   })
   const data = response.data;
   return {
@@ -176,6 +182,32 @@ function onChangeStoreId() {
   listRef.value.reset()
 }
 
+const activeInfo = ref<{
+  mainId?: number
+  mainName?: string
+  mainIndex?: number
+  subId?: number
+  subName?: string
+  subIndex?: number
+}>({
+  mainId: undefined,
+  mainIndex: undefined
+})
+
+const showOptions = ref(false);
+function onChangeGoodsType(value: any) {
+  showOptions.value = false
+  activeInfo.value = value;
+  listRef.value.reset()
+}
+
+const currentSearchTypeName = computed(() => {
+  const currentValue = activeInfo.value;
+  if (!currentValue.mainId && !currentValue.subId) return ''
+  if (currentValue.mainId && currentValue.subId) return `${currentValue.mainName}/${currentValue.subName}`
+  if (currentValue.mainId) return currentValue.mainName
+  return currentValue.subName
+})
 </script>
 
 <style scoped lang="less">
@@ -227,16 +259,17 @@ function onChangeStoreId() {
 
       &>span:nth-child(1) {
 
-        font-size: 13px;
-        color: #89959c;
         font-weight: 400;
+        color: #333333;
+        font-size: 17px;
         padding-left: 4px;
+        font-weight: 600;
       }
 
       &>span:nth-child(2) {
-        font-size: 17px;
-        color: #333333;
-        font-weight: 600;
+        font-size: 13px;
+        padding-left: 3px;
+        color: #89959c;
       }
     }
 

@@ -18,6 +18,7 @@
     </div>
 
     <Button v-if="showRejectBtn" class="operate" @click="onRejectConfirm" :loading="isRejecting">确认拒收入店</Button>
+    <Button v-if="showReDeliveryBtn" class="operate" @click="onRedelivery" :loading="isLoading">再投</Button>
   </div>
 </template>
 
@@ -28,7 +29,7 @@ import CompleteGoodsInfo from "@/components/CompleteGoodsInfo.vue"
 import PostInfo from "@/components/PostInfo.vue"
 import StatusBar from "@/components/StatusBar.vue"
 import { useRoute } from "vue-router"
-import { confirmReject, fetchOrderDetail } from "@/service"
+import { confirmReject, fetchOrderDetail, reDelivery } from "@/service"
 import { showError } from "@/utils"
 import { useRouter } from "vue-router"
 import { Button } from "vant"
@@ -55,6 +56,25 @@ const showRejectBtn = computed(() => {
   return orderDetail?.value?.orderStatus === 'JD_REJECTING'
 })
 
+/** 显示再投按钮 */
+const showReDeliveryBtn = computed(() => {
+  return orderDetail?.value?.orderStatus === 'JD_REJECTED'
+})
+
+const isLoading = ref(false)
+async function onRedelivery() {
+  try {
+    const params = route.params as any
+    isLoading.value = true;
+    await reDelivery(params.orderId)
+    onFetchOrderDetail()
+  } catch (error: any) {
+    showError(error?.message)
+  } finally {
+    isLoading.value = false;
+  }
+
+}
 function onClickStatusBar() {
   const params = route.params as any
   router.push(`/order/process/${params.orderId}`)
