@@ -9,7 +9,7 @@ import { createPinia } from "pinia"
 import "vant/lib/index.css"
 import piniaPluginPersistedstate from "pinia-plugin-persistedstate"
 import Wechat from "./utils/Wechat"
-import { APP_BASE_URL, APP_ID, isDev } from "./config"
+import { APP_BASE_URL, APP_ID, isDev, isProd } from "./config"
 import { fetchSignInfo } from "./service"
 
 const pinia = createPinia()
@@ -29,7 +29,7 @@ export const wechat = new Wechat(
 )
 
 const app = createApp(App)
-if (isDev) {
+if (!isProd) {
   app.use(() => new Vconsole())
 }
 pinia.use(piniaPluginPersistedstate)
