@@ -60,17 +60,21 @@ function initSnItemList(orderDetail: OrderDetail) {
   }>>((count, current) => {
     let item = current.quantity;
     let snListValue = `${current.productUniqueId ?? ''}`?.split(',')
-
-    let snListArr = new Array(item)
+    
+    let snListArr = new Array(item).fill("")
     snListArr = snListArr.map((_, index) => {
+      console.log("snListValue[index]",snListValue[index],snListValue);
       return snListValue[index] ?? ''
     })
+    
     count.push(
       {
         orderItemId: current.orderItemId,
         snList: snListArr
       }
     )
+    console.log(count);
+    
     return count;
   }, [])
 }
