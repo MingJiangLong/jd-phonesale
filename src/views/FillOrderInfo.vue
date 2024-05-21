@@ -20,13 +20,14 @@
               :loading="isSubmitting" v-if="!isSubmittedSN">购物清单</Button>
       <Button @click="goStockOut" class="sub-button"
               :loading="isSubmitting" v-if="!isSubmittedSN">出库单</Button>
-      <Button @click="onStockOut" class="sub-button" :loading="isSubmitting" v-if="isSubmittedSN">出库</Button>
+      <Button @click="onSubmitSN" v-if="isSubmittedSN" :loading="isSubmitting" class="sub-button">
+        重新提交序列号
+      </Button>
+      <Button @click="onStockOut" class="main-button" :loading="isSubmitting" v-if="isSubmittedSN">出库</Button>
       <Button @click="onSubmitSN" v-if="!isSubmittedSN" :loading="isSubmitting" class="main-button">
         提交序列号
       </Button>
-      <Button @click="onSubmitSN" v-if="isSubmittedSN" :loading="isSubmitting" class="main-button">
-        重新提交序列号
-      </Button>
+
     </div>
   </div>
 </template>
@@ -58,10 +59,16 @@ function initSnItemList(orderDetail: OrderDetail) {
     snList: Array<string>
   }>>((count, current) => {
     let item = current.quantity;
+    let snListValue = `${current.productUniqueId ?? ''}`?.split(',')
+
+    let snListArr = new Array(item)
+    snListArr = snListArr.map((_, index) => {
+      return snListValue[index] ?? ''
+    })
     count.push(
       {
         orderItemId: current.orderItemId,
-        snList: new Array(item).fill('')
+        snList: snListArr
       }
     )
     return count;

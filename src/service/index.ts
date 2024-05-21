@@ -408,6 +408,9 @@ type Order = {
   quantity: number
   orderItemId: number
   orderId: number
+
+  /** 序列号英文逗号拼接 */
+  productUniqueId?:string
 }
 
 type Ship = {

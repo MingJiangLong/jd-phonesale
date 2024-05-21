@@ -56,7 +56,6 @@ export function getAppToken() {
  * 去登录页面
  */
 export function redirectToLogin() {
-
   const loginUrl = `${APP_BASE_URL}/#/login`
   const url = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${APP_ID}&redirect_uri=${encodeURIComponent(loginUrl)}&response_type=code&scope=snsapi_base&state=123#wechat_redirect`;
   window.location.replace(url);
