@@ -51,7 +51,7 @@
         </div>
         <Row>
           <Col span="4" offset="20" style="color: red;text-align: end;padding: 10px 0;">
-          包裹数:2
+          包裹数:{{shoppingListDetail?.qty}}
           </Col>
           <Col span="10" offset="14" class="sign-box">
           <div>请确认商品齐全完整外观完好</div>
