@@ -15,19 +15,19 @@
       </Card>
       <PostInfo style="margin-top: 10px" />
     </div>
-    <div class="operate-bar">
-      <Button @click="goShoppingListPage" class="sub-button"
-              :loading="isSubmitting" v-if="!isSubmittedSN">购物清单</Button>
-      <Button @click="goStockOut" class="sub-button"
-              :loading="isSubmitting" v-if="!isSubmittedSN">出库单</Button>
-      <Button @click="onSubmitSN" v-if="isSubmittedSN" :loading="isSubmitting" class="sub-button">
-        重新提交序列号
-      </Button>
+    <div :class="isSubmittedSN ? 'operate-bar' : 'operate-bar-2'" >
+        <Button @click="goShoppingListPage" class="sub-button"
+        :loading="isSubmitting" v-if="!isSubmittedSN">购物清单</Button>
+        <Button @click="goStockOut" class="sub-button"
+        :loading="isSubmitting" v-if="!isSubmittedSN">出库单</Button>
+        
+        <Button @click="onSubmitSN" v-if="isSubmittedSN" :loading="isSubmitting" class="sub-button">
+          重新提交序列号
+        </Button>
       <Button @click="onStockOut" class="main-button" :loading="isSubmitting" v-if="isSubmittedSN">出库</Button>
       <Button @click="onSubmitSN" v-if="!isSubmittedSN" :loading="isSubmitting" class="main-button">
         提交序列号
       </Button>
-
     </div>
   </div>
 </template>
@@ -60,13 +60,13 @@ function initSnItemList(orderDetail: OrderDetail) {
   }>>((count, current) => {
     let item = current.quantity;
     let snListValue = `${current.productUniqueId ?? ''}`?.split(',')
-    
+
     let snListArr = new Array(item).fill("")
     snListArr = snListArr.map((_, index) => {
-      console.log("snListValue[index]",snListValue[index],snListValue);
+      console.log("snListValue[index]", snListValue[index], snListValue);
       return snListValue[index] ?? ''
     })
-    
+
     count.push(
       {
         orderItemId: current.orderItemId,
@@ -74,7 +74,7 @@ function initSnItemList(orderDetail: OrderDetail) {
       }
     )
     console.log(count);
-    
+
     return count;
   }, [])
 }
@@ -158,9 +158,11 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-x: hidden;
 
   &>div:first-child {
     flex: 1;
+    scrollbar-width: none;
     overflow-y: scroll;
   }
 
@@ -198,6 +200,7 @@ onMounted(() => {
   .operate {
     width: 87vw;
     height: 6vh;
+  
     background-image: linear-gradient(135deg, #009aff 0%, #0093ee 100%);
     border-radius: 25px;
     color: #ffffff;
@@ -206,49 +209,51 @@ onMounted(() => {
   }
 
   .operate-bar {
-    margin-top: 10px;
     width: 95vw;
     height: 6vh;
-    display: flex;
+    display: grid;
+    margin-top: 10px;
+    grid-template-columns: auto 1fr;
+    column-gap: 10px;
 
     .sub-button {
-      flex: 2;
       color: #0095F1;
       background: white;
       font-size: 13px;
-      // margin: if(@start =2, 0 5px, 0);
       border-radius: 10px;
       transform: scale(0.9)
     }
 
     .main-button {
-      flex: 5;
       color: white;
-
       background: linear-gradient(103deg, #009AFF 0%, #0093EE 100%);
       font-size: 17px;
       border-radius: 20px;
     }
+  }
 
-    // .set-button-in-operate-bar() {
-    //   .looping(@start) when (@start >=1) {
-    //     button:nth-child(@{start}) {
-    //       flex: if(@start =3, 5, 2);
-    //       color: if(@start <=2, #0095F1, white);
-    //       background: if(@start > 2, linear-gradient(103deg, #009AFF 0%, #0093EE 100%), white);
-    //       font-size: if(@start>2, 17px, 13px);
-    //       margin: if(@start =2, 0 5px, 0);
-    //       border-radius: if(@start=3, 20px, 10px);
-    //       transform: scale(if(@start=3, 1, 0.9))
-    //     }
+  .operate-bar-2 {
+    margin-top: 10px;
+    width: 95vw;
+    height: 6vh;
+    display: grid;
+    column-gap: 10px;
+    grid-template-columns: auto auto 1fr;
 
-    //     .looping((@start - 1))
-    //   }
+    .sub-button {
+      color: #0095F1;
+      background: white;
+      font-size: 13px;
+      border-radius: 10px;
+      transform: scale(0.9)
+    }
 
-    //   .looping(3)
-    // }
-
-    // .set-button-in-operate-bar();
+    .main-button {
+      color: white;
+      background: linear-gradient(103deg, #009AFF 0%, #0093EE 100%);
+      font-size: 17px;
+      border-radius: 20px;
+    }
   }
 }
 </style>
